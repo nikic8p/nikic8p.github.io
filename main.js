@@ -34,7 +34,8 @@ var trace1= {
     mode: 'markers+text',
     marker: {
         size: 5,
-        opacity: 0.8
+        opacity: 0.8,
+        color: 'blue',
     }
 };
 
@@ -59,7 +60,8 @@ var trace2= {
     mode: 'markers+text',
     marker: {
         size: 5,
-        opacity: 0.8
+        opacity: 0.8,
+        color: 'red',
     }
 };
 
