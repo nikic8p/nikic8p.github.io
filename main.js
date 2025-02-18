@@ -1,143 +1,76 @@
+// function to read json file
 
-// Control Panel erstellen
-
-let gui = new lil.GUI();
-
-var stop = false;
-var controls = {
-    mikrofon: function(){startMikrofon()},
-    sinus: function(){startSinus()},
-    frequenz: 1,
-    stop: function(){stop = true;},
-    clear: function(){clearPlot()}
-}
-gui.add(controls, 'mikrofon');
-gui.add(controls, 'sinus');
-gui.add(controls, 'frequenz', 0, 20000).onChange( value => {
-    sinus.setFrequency(value);
-});
-gui.add(controls, 'stop');
-gui.add(controls, 'clear');
-
-// Auswahl des DIV Elements in der HTML file
-// hier wird mit Plotly gezeichnet
-
+// var data = [{
+//     z: z_data,
+//     type: 'scatter3d',
+//     showscale: false,
+//     displayModeBar: false
+// }];
 var DEMONSTRATOR = document.getElementById('demonstrator');
 
-// 2D Arrays für den Plot gefüllt mit 0
+var data = [{"principal component 1":-2.5033615265,"principal component 2":-2.116819747,"principal component 3":-0.473804993,"Parties":"SPD"},{"principal component 1":4.3877263247,"principal component 2":-2.9056953124,"principal component 3":-0.2263891828,"Parties":"CDU\/CSU"},{"principal component 1":-3.165101672,"principal component 2":-1.9881037207,"principal component 3":-0.2600675969,"Parties":"GR\u00dcNE"},{"principal component 1":3.4618633767,"principal component 2":-2.9394726217,"principal component 3":3.3510534468,"Parties":"FDP"},{"principal component 1":6.1578362079,"principal component 2":1.2196474025,"principal component 3":1.5942670099,"Parties":"AfD"},{"principal component 1":-4.2230297489,"principal component 2":0.7891514529,"principal component 3":0.7191278527,"Parties":"Die Linke"},{"principal component 1":-3.7552158716,"principal component 2":-1.40666507,"principal component 3":-1.0844597683,"Parties":"SSW"},{"principal component 1":2.8141761006,"principal component 2":-2.2817992233,"principal component 3":-1.4705284788,"Parties":"FREIE W\u00c4HLER"},{"principal component 1":-4.2855037163,"principal component 2":-0.2808394355,"principal component 3":0.2438904947,"Parties":"Tierschutzpartei"},{"principal component 1":2.5155043889,"principal component 2":3.285735427,"principal component 3":-1.7052834319,"Parties":"dieBasis"},{"principal component 1":-4.1190197899,"principal component 2":0.4651758663,"principal component 3":0.3103787579,"Parties":"Die PARTEI"},{"principal component 1":-1.0811685531,"principal component 2":1.3778883917,"principal component 3":1.1866515076,"Parties":"Die Gerechtigkeitspartei \u2013 Team Todenh\u00f6fer"},{"principal component 1":-3.5888192309,"principal component 2":-0.6956179892,"principal component 3":-0.8961287871,"Parties":"Piratenpartei"},{"principal component 1":-4.2395874446,"principal component 2":-1.0516453495,"principal component 3":-0.1021005173,"Parties":"Volt"},{"principal component 1":-1.8477602316,"principal component 2":0.9038825697,"principal component 3":-2.7630731735,"Parties":"\u00f6dp"},{"principal component 1":1.1817951854,"principal component 2":-0.0640813717,"principal component 3":0.2228537475,"Parties":"Verj\u00fcngungsforschung"},{"principal component 1":-1.8202213287,"principal component 2":-2.1124414834,"principal component 3":1.1392694846,"Parties":"PdH"},{"principal component 1":5.3030935136,"principal component 2":1.0824046838,"principal component 3":-2.4163883755,"Parties":"b\u00fcndnis C"},{"principal component 1":5.1543258217,"principal component 2":-0.3005168903,"principal component 3":-0.3348227425,"Parties":"Bayernpartei"},{"principal component 1":-3.7047074004,"principal component 2":2.1912576679,"principal component 3":0.7780447198,"Parties":"MLPD"},{"principal component 1":3.123979796,"principal component 2":1.4738648261,"principal component 3":-1.3427654445,"Parties":"Menschliche Welt"},{"principal component 1":-1.4620246971,"principal component 2":-2.2147261478,"principal component 3":-2.3686742017,"Parties":"PdF"},{"principal component 1":-3.6061367716,"principal component 2":2.2698276931,"principal component 3":1.0976123288,"Parties":"SGP"},{"principal component 1":2.7645882546,"principal component 2":2.9478088812,"principal component 3":-0.3926042117,"Parties":"B\u00fcSo"},{"principal component 1":5.899777948,"principal component 2":-0.5469291753,"principal component 3":-0.1655596045,"Parties":"B\u00fcndnis Deutschland"},{"principal component 1":-0.671419082,"principal component 2":1.4458259595,"principal component 3":1.8488601001,"Parties":"BSW"},{"principal component 1":-4.2142455748,"principal component 2":1.4920681796,"principal component 3":1.2684859944,"Parties":"MERA25"},{"principal component 1":5.5226557219,"principal component 2":-0.0391854635,"principal component 3":2.2421550652,"Parties":"WerteUnion"},{"principal component 1":1.0004551329,"principal component 2":0.2968361332,"principal component 3":-0.968140989,"Parties":"Alex"},{"principal component 1":-2.9941904802,"principal component 2":-1.1975396083,"principal component 3":-0.565799292,"Parties":"Chris"},{"principal component 1":-2.5683151777,"principal component 2":-2.2756188395,"principal component 3":-0.9178503995,"Parties":"Henning"},{"principal component 1":-2.7203377145,"principal component 2":-1.8830257264,"principal component 3":-0.4629148329,"Parties":"Jonas"},{"principal component 1":1.3486877544,"principal component 2":-0.7284280021,"principal component 3":0.1587660274,"Parties":"Max"},{"principal component 1":-3.6283398312,"principal component 2":0.3748765136,"principal component 3":-0.0328158167,"Parties":"Nicolas"},{"principal component 1":-1.2667909594,"principal component 2":-0.5804917986,"principal component 3":0.2234262833,"Parties":"Niki"},{"principal component 1":-2.756642239,"principal component 2":-2.3469758467,"principal component 3":-0.6734687012,"Parties":"Philip"}]
 
-let z_data = new Array(200).fill(0).map(()=>new Array(256).fill(0));
+// data = data.map(function(d) {
+//     return {
+//         x: d["principal component 1"],
+//         y: d["principal component 2"],
+//         z: d["principal component 3"],
+//         text: d["Parties"],
+//         type: 'scatter3d',
+//         mode: 'markers',
+//         marker: {
+//             size: 5,
+//             opacity: 0.8
+//         }
+//     };
+// }
+// );
+//console.log(data.length);
+var text = new Array(data.length);
+var z_data = new Array(data.length);
+var y_data = new Array(data.length);
+var x_data = new Array(data.length);
 
-// Erstellen der Plotly-js Objekte für das Zeichnen des Plots
+var plot_data = new Array(data.length);
 
-var data = [{
+for (var i = 0; i<data.length; i++) {
+    x_data[i] = data[i]["principal component 1"];
+    y_data[i] = data[i]["principal component 2"];
+    z_data[i] = data[i]["principal component 3"];
+    text[i] = data[i]["Parties"];
+}
+
+console.log(x_data);
+console.log(y_data);
+console.log(z_data);
+console.log(text);
+
+data= {
+    x: x_data,
+    y: y_data,
     z: z_data,
-    type: 'surface',
-    showscale: false,
-    displayModeBar: false
-}];
-
-var defaultPlotlyConfiguration = { 
-    modeBarButtonsToRemove: [
-        'pan',
-        'orbitRotation',
-        'tableRotation',
-        'resetCameraDefault3d',
-        'resetCameraLastSave3d',
-        'zoom',
-        'toImage',
-        'sendDataToCloud', 
-        'autoScale2d', 
-        'hoverClosestCartesian', 
-        'hoverCompareCartesian', 
-        'lasso2d', 
-        'select2d'
-    ], 
-    displaylogo: false, 
-    showTips: false
+    text: text,
+    type: 'scatter3d',
+    mode: 'markers+text',
+    marker: {
+        size: 5,
+        opacity: 0.8
+    }
 };
+plot_data[0] = data;
+//console.log(data);
+console.log(plot_data);
+//console.log(x_data);
+//console.log(y_data);
+//console.log(z_data);
 
-var layout = {
-    title: {
-    text: 'Demonstrator für die diskrete Fouriertransformation'
-    },
-    scene: {
-        camera: {eye: {x: 1.87, y: 0.88, z: 0.64}},
-        aspectmode: "manual",
-        aspectratio: {x: 1, y: 2, z: 0.2},
-        xaxis: {
-            title: {
-                text: 'Frequenz',
-            },
-            tickvals: [0, 53, 106, 159, 212],
-            ticktext: [0, 5000, 10000, 15000, 20000]
-        },
-        yaxis: {
-            title: {
-                text: 'Zeit',
-            }
-        },
-    },
-    autosize: true,
-    width: DEMONSTRATOR.clientWidth,
-    height: DEMONSTRATOR.clientHeight, 
-};
+//console.log(text);
+var layout = {margin: {
+	l: 0,
+	r: 0,
+	b: 0,
+	t: 0
+}};
 
 //Initiales Zeichnen des Plots
-Plotly.newPlot(DEMONSTRATOR, data, layout, defaultPlotlyConfiguration);
-
-
-// Erstellen der mikrofon Instanz
-const microphone = new Microphone();
-function startMikrofon(){
-    
-    redraw(microphone);
-
-}
-
-// Starte Sinus Generator
-const sinus = new SineGenerator(controls.frequenz);
-function startSinus(){
-
-    redraw(sinus);
-
-}
-
-
-
-var frequenzen;
-
-function redraw(srcObject){
-
-
-    frequenzen = srcObject.getFrequencys();
-
-    z_data = z_data.slice(1);
-    z_data.push(...[frequenzen]);
-
-    var update = {
-        z: [z_data]
-    }
-
-    Plotly.update(DEMONSTRATOR, update, 0);
-    
-    setTimeout(function() {
-        if (stop === true) {
-            stop = false;
-            return;
-        }
-        redraw(srcObject);
-      }, 10);
-}
-
-
-
-
-function clearPlot(){
-    z_data = new Array(200).fill(0).map(()=>new Array(256).fill(0));
-    var update = {
-        z: [z_data]
-    }
-
-    Plotly.update(DEMONSTRATOR, update, 0);
-}
+Plotly.newPlot(DEMONSTRATOR, [data], layout);
